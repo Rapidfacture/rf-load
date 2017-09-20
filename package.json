@@ -1,0 +1,18 @@
+{
+  "author": {
+    "name": "Rapidfacture GmbH"
+  },
+  "description": "Simple NodeJS module loading lib",
+  "license": "MIT",
+  "main": "index.js",
+  "maintainers": [
+    {
+      "name": "rf-jvm",
+      "email": "jvm@rapidfacture.com"
+    }
+  ],
+  "name": "rf-load",
+  "dependencies": {},
+  "devDependencies": {},
+  "version": "0.1.9"
+}
