@@ -83,9 +83,9 @@ var acl = require("rf-load").require("acl");
 
 ## Conflicting module names
 
-If you ever run into the issue of having modules of the same base name, that would later on cause confusion on your .require() calls, you can define a prefix that is added in front of each modules name.
+If you have modules with the same name in you .require() calls, define a prefix in front of each modules name.
 
-For example, imagine two module directories:
+For example two module directories:
 * moddir1
   * mod1.js
   * mod2.js
@@ -93,8 +93,7 @@ For example, imagine two module directories:
   * mod1.js
   * mod2.js
 
-Now include them as follows:
-
+Include them:
 ```js
 var load1 = new(require("rf-load").moduleLoader)("dir1.");
 load1.moduleDirectory("moddir1");
@@ -105,7 +104,7 @@ load2.moduleDirectory("moddir2");
 load2.startModules();
 ```
 
-Later on, you can require them individually with their prefix:
+Now require them individually with their prefix:
 ```js
 var moddir1_mod2 = require("rf-load").require("dir1.mod2"),
     moddir2_mod1 = require("rf-load").require("dir2.mod1");

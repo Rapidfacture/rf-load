@@ -2,26 +2,25 @@
 /* jshint node: true */ "use strict";
 
 var fs = require("fs");
+var logPrefix = "[rf-load] ";
 var exp = module.exports;
+exp.modules = {};
+
 
 // error handling
 var logError = function(err){
-   throw new Error(console.log(err));
+   throw new Error(console.log(logPrefix + err));
 };
 try { // try using rf-log
    var critical = require(require.resolve("rf-log")).critical;
-   if(critical) logError = critical;
+   if(critical) logError = function(err){critical(logPrefix, err);};
 } catch (e) {}
-
-
-
-exp.modules = {};
 
 
 
 exp.require = function (module) {
    if (exp.modules[module] === undefined) {
-      logError("Module '" + module + " wasn't loaded yet! Make sure to include it in your load module process.");
+      logError("Module '" + module + "' wasn't loaded yet! Include it in your load process.");
    }
    if (typeof exp.modules[module].require === "string") {
       logError("You are using a forward dependency for module '" + module + "'. Fix the order of your module inclusions or avoid this dependency.");
