@@ -1,18 +1,25 @@
 {
+  "name": "rf-load",
+  "description": "Simple NodeJS module loading lib",
+  "version": "0.1.10",
+  "license": "MIT",
+  "main": "index.js",
   "author": {
     "name": "Rapidfacture GmbH"
   },
-  "description": "Simple NodeJS module loading lib",
-  "license": "MIT",
-  "main": "index.js",
   "maintainers": [
     {
-      "name": "rf-jvm",
-      "email": "jvm@rapidfacture.com"
+      "name": "rapidfacture",
+      "email": "ff@rapidfacture.com"
     }
   ],
-  "name": "rf-load",
   "dependencies": {},
-  "devDependencies": {},
-  "version": "0.1.9"
+  "scripts": {
+     "prepublish": "npm test",
+     "test": "grunt"
+  },
+  "devDependencies":{
+     "grunt":"1.0.1",
+     "grunt-eslint":"20.1.0"
+  }
 }
