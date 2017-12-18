@@ -3,6 +3,10 @@
   "description": "Simple NodeJS module loading lib",
   "version": "0.1.10",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:RAPIDFACTURE/rf-load.git"
+    },
   "main": "index.js",
   "author": {
     "name": "Rapidfacture GmbH"
