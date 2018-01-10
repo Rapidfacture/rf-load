@@ -6,7 +6,7 @@
   "repository": {
     "type": "git",
     "url": "git@github.com:RAPIDFACTURE/rf-load.git"
-    },
+  },
   "main": "index.js",
   "author": {
     "name": "Rapidfacture GmbH"
@@ -17,13 +17,17 @@
       "email": "ff@rapidfacture.com"
     }
   ],
-  "dependencies": {},
-  "scripts": {
-     "prepublish": "npm test",
-     "test": "grunt"
+  "dependencies": {
   },
-  "devDependencies":{
-     "grunt":"1.0.1",
-     "grunt-eslint":"20.1.0"
+  "scripts": {
+    "prepublish": "npm test",
+    "test": "grunt"
+  },
+  "devDependencies": {
+    "grunt": "1.0.1",
+    "grunt-eslint": "20.1.0",
+    "mocha": "^4.1.0",
+    "grunt-mocha-test": "^0.13.3",
+    "expect.js": "^0.3.1"
   }
 }

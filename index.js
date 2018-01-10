@@ -36,14 +36,24 @@ exp.moduleLoader = function (modulePrefix) {
    // Init
    var modulepath = '.'
    var setModulePath = function (path) {
-      modulepath = path
+      try {
+         fs.lstatSync(path).isDirectory()
+         modulepath = path
+         return true
+      } catch (err) {
+         logError('The provided module path is not a directory')
+      }
    }
 
 
    // Load module file path for the first time
    function loadFile (module, options, useBasePath) {
-      var path = ((useBasePath) ? '' : modulepath)
-      return loadModule(path + '/' + module + '.js', options)
+      if (module.includes('.js') || module.includes('/')) {
+         logError("Provided module is a file (remove  '.js') or directory, use 'setModulePath'")
+      } else {
+         var path = ((useBasePath) ? '' : modulepath)
+         return loadModule(path + '/' + module + '.js', options)
+      }
    }
 
    // Load module for the first time (NPM or file path)
@@ -75,18 +85,20 @@ exp.moduleLoader = function (modulePrefix) {
 
    // Start modules
    var modulePosition = 0 // How many modules have been worked off so far?
-   function startModules (noclear) {
-      if (!noclear) {
-         loadFunction(function (options, next) {
-            modulelist = []
-            modulePosition = 0
-            moduleoptions = {}
-         }, null, '__clear')
-      }
+   function startModules () {
+      // if (!noclear) {
+      //    loadFunction(function (options, next) {
+      //       modulelist = []
+      //       modulePosition = 0
+      //       moduleoptions = {}
+      //    }, null, '__clear')
+      // }
 
       function next () {
          var module = modulelist[modulePosition++]
-         // log.info("Executing module '" + module + "' (position " + modulePosition);
+         console.log('no modulelist?', modulelist)
+         console.log('no module?', module)
+
 
          if (typeof exp.modules[module].require === 'string') {
             try {
@@ -105,6 +117,7 @@ exp.moduleLoader = function (modulePrefix) {
 
          exp.modules[module].start(moduleoptions[module], next)
       }
+
       next()
    }
 
