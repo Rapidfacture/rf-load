@@ -17,11 +17,8 @@
       "email": "ff@rapidfacture.com"
     }
   ],
-  "dependencies": {
-  },
+  "dependencies": {},
   "scripts": {
-    "prepublish": "np  minor --no-publish",
-    "postpublish": "np --no-publish --no-cleanup --yolo --tag",
     "test": "grunt"
   },
   "devDependencies": {
