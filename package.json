@@ -1,7 +1,7 @@
 {
   "name": "rf-load",
   "description": "Simple NodeJS module loading lib",
-  "version": "0.1.10",
+  "version": "0.1.11",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -20,10 +20,12 @@
   "dependencies": {
   },
   "scripts": {
-    "prepublish": "npm test",
+    "prepublish": "np  minor --no-publish",
+    "postpublish": "np --no-publish --no-cleanup --yolo --tag",
     "test": "grunt"
   },
   "devDependencies": {
+    "np": "2.18.3",
     "grunt": "1.0.1",
     "grunt-eslint": "20.1.0",
     "mocha": "^4.1.0",
