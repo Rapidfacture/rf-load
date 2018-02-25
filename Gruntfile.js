@@ -1,10 +1,10 @@
 
 module.exports = function (grunt) {
-   grunt.loadNpmTasks('grunt-eslint')
-   grunt.loadNpmTasks('grunt-mocha-test')
+   grunt.loadNpmTasks('grunt-eslint');
+   grunt.loadNpmTasks('grunt-mocha-test');
 
-   grunt.registerTask('default', ['eslint'])
-   grunt.registerTask('unitTest', ['mochaTest'])
+   grunt.registerTask('default', ['eslint']);
+   grunt.registerTask('unitTest', ['mochaTest']);
 
    grunt.initConfig({
       pkg: grunt.file.readJSON('package.json'),
@@ -29,5 +29,5 @@ module.exports = function (grunt) {
             src: ['test/*.js']
          }
       }
-   })
-}
+   });
+};
