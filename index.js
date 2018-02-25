@@ -105,7 +105,7 @@ exp.moduleLoader = function (modulePrefix) {
                exp.modules[module] = require(require.resolve(
                   exp.modules[module].require));
             } catch (e) {
-               logError("Error loading module '" + module + "': " + e.message);
+               logError(`Error loading module '${module}': ${e.message}\n${e.stack}`);
                return false;
             }
          }
