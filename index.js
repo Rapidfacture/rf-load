@@ -1,90 +1,90 @@
 // rf-load initializes rapidfacture and node modules
 
 
-var fs = require('fs')
-var logPrefix = '[rf-load] '
-var exp = module.exports
-exp.modules = {}
+var fs = require('fs');
+var logPrefix = '[rf-load] ';
+var exp = module.exports;
+exp.modules = {};
 
 
 // error handling
 var logError = function (err) {
-   throw new Error(console.log(logPrefix + err))
-}
+   throw new Error(console.log(logPrefix + err));
+};
 try { // try using rf-log
-   var critical = require(require.resolve('rf-log')).critical
-   if (critical) logError = function (err) { critical(logPrefix, err) }
+   var critical = require(require.resolve('rf-log')).critical;
+   if (critical) logError = function (err) { critical(logPrefix, err); };
 } catch (e) {}
 
 
 
 exp.require = function (module) {
    if (exp.modules[module] === undefined) {
-      logError("Module '" + module + "' wasn't loaded yet! Include it in your load process.")
+      logError("Module '" + module + "' wasn't loaded yet! Include it in your load process.");
    }
    if (typeof exp.modules[module].require === 'string') {
-      logError("You are using a forward dependency for module '" + module + "'. Fix the order of your module inclusions or avoid this dependency.")
+      logError("You are using a forward dependency for module '" + module + "'. Fix the order of your module inclusions or avoid this dependency.");
    }
-   return exp.modules[module]
-}
+   return exp.modules[module];
+};
 
 
 
 exp.moduleLoader = function (modulePrefix) {
-   modulePrefix = ((typeof modulePrefix === 'string') ? modulePrefix : '')
+   modulePrefix = ((typeof modulePrefix === 'string') ? modulePrefix : '');
 
    // Init
-   var modulepath = '.'
+   var modulepath = '.';
    var setModulePath = function (path) {
       try {
-         fs.lstatSync(path).isDirectory()
-         modulepath = path
-         return true
+         fs.lstatSync(path).isDirectory();
+         modulepath = path;
+         return true;
       } catch (err) {
-         logError('The provided module path is not a directory')
+         logError('The provided module path is not a directory');
       }
-   }
+   };
 
 
    // Load module file path for the first time
    function loadFile (module, options, useBasePath) {
       if (module.includes('.js') || module.includes('/')) {
-         logError("Provided module is a file (remove  '.js') or directory, use 'setModulePath'")
+         logError("Provided module is a file (remove  '.js') or directory, use 'setModulePath'");
       } else {
-         var path = ((useBasePath) ? '' : modulepath)
-         return loadModule(path + '/' + module + '.js', options)
+         var path = ((useBasePath) ? '' : modulepath);
+         return loadModule(path + '/' + module + '.js', options);
       }
    }
 
    // Load module for the first time (NPM or file path)
    function loadModule (module, options) {
       // ensure module name contains no directory path or a file extension
-      var name = module.split(/[\\/]/).pop().replace(/\.[^/.]+$/, '')
-      return loadFunction(null, options, name, { require: module })
+      var name = module.split(/[\\/]/).pop().replace(/\.[^/.]+$/, '');
+      return loadFunction(null, options, name, { require: module });
    }
 
    // Load function
-   var moduleoptions = {}, modulelist = [], unnamedModuleCounter = 0
+   var moduleoptions = {}, modulelist = [], unnamedModuleCounter = 0;
    function loadFunction (func, options, modulename, obj) {
       if (typeof modulename !== 'string') {
          // Function without a name. Create one.
-         modulename = 'unnamed.' + (unnamedModuleCounter++)
+         modulename = 'unnamed.' + (unnamedModuleCounter++);
       }
-      modulename = modulePrefix + modulename
+      modulename = modulePrefix + modulename;
 
       // log.info("Mod '"+modulename+"' loaded."));
-      exp.modules[modulename] = ((typeof obj === 'object') ? obj : { start: func })
+      exp.modules[modulename] = ((typeof obj === 'object') ? obj : { start: func });
       moduleoptions[modulename] = ((typeof options === 'object')
-         ? options : {})
+         ? options : {});
 
       // Register module for loading
-      modulelist.push(modulename)
+      modulelist.push(modulename);
 
-      return true
+      return true;
    }
 
    // Start modules
-   var modulePosition = 0 // How many modules have been worked off so far?
+   var modulePosition = 0; // How many modules have been worked off so far?
    function startModules () {
       // if (!noclear) {
       //    loadFunction(function (options, next) {
@@ -95,68 +95,68 @@ exp.moduleLoader = function (modulePrefix) {
       // }
 
       function next () {
-         var module = modulelist[modulePosition++]
-         console.log('no modulelist?', modulelist)
-         console.log('no module?', module)
+         var module = modulelist[modulePosition++];
+         console.log('no modulelist?', modulelist);
+         console.log('no module?', module);
 
 
          if (typeof exp.modules[module].require === 'string') {
             try {
                exp.modules[module] = require(require.resolve(
-                  exp.modules[module].require))
+                  exp.modules[module].require));
             } catch (e) {
-               logError("Error loading module '" + module + "': " + e.message)
-               return false
+               logError("Error loading module '" + module + "': " + e.message);
+               return false;
             }
          }
 
          if (typeof exp.modules[module].start !== 'function') {
-            logError("Module '" + module + "' has no start() function!")
-            return false
+            logError("Module '" + module + "' has no start() function!");
+            return false;
          }
 
-         exp.modules[module].start(moduleoptions[module], next)
+         exp.modules[module].start(moduleoptions[module], next);
       }
 
-      next()
+      next();
    }
 
 
    // Load all modules in a list serially
    function loadModules (modules, useBasePath) {
       modules.forEach(function (m) {
-         if (typeof m === 'string') loadFile(m, {}, useBasePath)
+         if (typeof m === 'string') loadFile(m, {}, useBasePath);
 
-         if (typeof m !== 'object') return
+         if (typeof m !== 'object') return;
 
-         if (m.type === 'file') loadModule(m.file, m.options, useBasePath)
+         if (m.type === 'file') loadModule(m.file, m.options, useBasePath);
 
-         if (m.type === 'npm') loadModule(m.name, m.options)
+         if (m.type === 'npm') loadModule(m.name, m.options);
 
-         if (m.type === 'function') loadFunction(m.func, m.options, m.name, m.obj)
-      })
-      return true
+         if (m.type === 'function') loadFunction(m.func, m.options, m.name, m.obj);
+      });
+      return true;
    }
 
    // Load all modules from a directory in parallel
    function loadModuleDirectory (path) {
-      return loadModules(getDirectoryPaths(path), true)
+      return loadModules(getDirectoryPaths(path), true);
    }
 
 
    function getDirectoryPaths (path) {
-      var pathList = []
+      var pathList = [];
       fs.readdirSync(path).forEach(function (file) {
-         var filePath = path + '/' + file
-         var stat = fs.statSync(filePath)
+         var filePath = path + '/' + file;
+         var stat = fs.statSync(filePath);
 
          if (stat && stat.isDirectory()) {
-            pathList = pathList.concat(getDirectoryPaths(filePath))
+            pathList = pathList.concat(getDirectoryPaths(filePath));
          } else if (file[0] !== '.') {
-            pathList.push(path + '/' + file.split('.')[0])
+            pathList.push(path + '/' + file.split('.')[0]);
          }
-      })
-      return pathList
+      });
+      return pathList;
    }
 
 
@@ -170,5 +170,5 @@ exp.moduleLoader = function (modulePrefix) {
       file: loadFile,
       module: loadModule,
       func: loadFunction
-   }
-}
+   };
+};
